@@ -1,0 +1,8 @@
+.idea
+.venv
+__pycache__
+.env
+
+dataset
+images
+test_input

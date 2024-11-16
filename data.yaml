@@ -1,0 +1,5 @@
+train: /home/daniyarsus/PycharmProjects/airathon_2024/dataset/train/images
+val: /home/daniyarsus/PycharmProjects/airathon_2024/dataset/val/images
+
+nc: 15
+names: ['bench', 'bicycle', 'bus', 'car', 'construction sign', 'crosswalk', 'motorcycle', 'one way sign', 'pedestrian crossing sign', 'person', 'railroad sign', 'stop sign', 'street name sign', 'traffic light', 'truck']
