@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str
 
     class Config:
-        env_file = "../.env"
+        env_file = ".env"
 
 
 # Настройка openai клиента
@@ -30,7 +30,7 @@ class SendGptTextRequest(BaseModel):
 # Роутер для ai сервиса
 router = APIRouter(prefix="/api/v1/ai", tags=["AI API methods."])
 
-IMAGES_DIR = "../images"
+IMAGES_DIR = "images"
 os.makedirs(IMAGES_DIR, exist_ok=True)
 
 
@@ -130,7 +130,7 @@ def create_app() -> FastAPI:
 # Запускаем приложение :)
 if __name__ == "__main__":
     uvicorn.run(
-        app='app:create_app',
+        app='src.app:create_app',
         factory=True,
         host="0.0.0.0",
         port=8000
