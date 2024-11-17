@@ -14,4 +14,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD python -m src.presentation.main
+CMD python -m src.app
