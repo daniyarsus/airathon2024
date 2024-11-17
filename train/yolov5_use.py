@@ -1,10 +1,15 @@
 from ultralytics import YOLO
+import cv2
 
-# Загрузка обученной модели (укажите путь к файлу с весами)
-model = YOLO('yolov5su.pt')
+# Загрузка обученной модели (замените путь на ваш)
+model = YOLO('yolo11n.pt')
 
-# Детекция на одном изображении
-results = model.predict(source='images/satbayev_manasa.jpg', save=True, imgsz=640)
+# Загрузка изображения для предсказания
+img = 'test_input/traffic-light-389-_jpg.rf.02c5d25a86f657933155c9523a9b8e32.jpg'
+
+# Выполнение предсказания
+results = model(img)
+
 
 for result in results:
     boxes = result.boxes  # Получение всех рамок

@@ -4,5 +4,4 @@ from ultralytics import YOLO
 model = YOLO('yolov5s.pt')
 
 # Загрузка и тренировка на вашем датасете
-model.train(data='data.yaml', epochs=50, imgsz=640, batch=16, device='cpu')
-
+model.train(data='data_large.yaml', epochs=50, imgsz=640, batch=16, device='gpu')

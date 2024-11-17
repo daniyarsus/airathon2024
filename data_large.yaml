@@ -1,0 +1,6 @@
+test: /home/daniyarsus/PycharmProjects/airathon_2024/dataset_large/test/images
+train: /home/daniyarsus/PycharmProjects/airathon_2024/dataset_large/train/images
+val: /home/daniyarsus/PycharmProjects/airathon_2024/dataset_large/valid/images
+
+nc: 8
+names: ['crosswalk', 'no overtakes', 'priority road', 'stop', 'traffic light- green', 'traffic light- red', 'trafic light- red', 'yield']

@@ -4,5 +4,8 @@ __pycache__
 .env
 
 dataset
+dataset_large
 images
 test_input
+yolov5su.pt
+yolo11n.pt

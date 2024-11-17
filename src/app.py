@@ -1,13 +1,21 @@
 import os
 import base64
 import shutil
+from typing import Any
 
+from PIL import Image
 import uvicorn
 from fastapi import FastAPI, APIRouter, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from openai import OpenAI
+from inference_sdk import InferenceHTTPClient
+
+CLIENT_CV = InferenceHTTPClient(
+    api_url="https://detect.roboflow.com",
+    api_key="3BDEDCPYaZmmWDOEAaSN"
+)
 
 
 # Настройки окружения
@@ -32,6 +40,13 @@ router = APIRouter(prefix="/api/v1/ai", tags=["AI API methods."])
 
 IMAGES_DIR = "images"
 os.makedirs(IMAGES_DIR, exist_ok=True)
+
+
+def compress_image(input_path: str, output_path: str, quality: int = 50):
+    """Сжимает изображение до указанного качества."""
+    with Image.open(input_path) as img:
+        img = img.convert("RGB")
+        img.save(output_path, "JPEG", quality=quality)
 
 
 def encode_image(image_path):
@@ -93,20 +108,33 @@ async def send_gpt_photo_endpoint(file: UploadFile = File(...)) -> dict[str, str
 
 
 @router.post("/local-photo")
-async def send_local_photo_endpoint(file: UploadFile = File(...)) -> dict[str, str]:
+async def send_local_photo_endpoint(file: UploadFile = File(...)) -> dict[str, Any]:
+    # Сохраняем загруженный файл локально
     file_path = os.path.join(IMAGES_DIR, file.filename)
+    with open(file_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
 
-    if file_path:
-        ...
+    # Путь для сжатого изображения
+    compressed_file_path = os.path.join(IMAGES_DIR, f"compressed_{file.filename}")
 
-    processed_info = file_path
+    # Сжимаем изображение до качества 50 (можно настроить)
+    compress_image(file_path, compressed_file_path, quality=50)
 
+    # Кодируем сжатое изображение в Base64
+    base64_image = encode_image(compressed_file_path)
+
+    # Отправляем сжатое изображение на сервер
+    result = CLIENT_CV.infer(compressed_file_path, model_id="trafficsigndetection-vwdix/10")
+
+    # Удаляем временные файлы после обработки
     if os.path.exists(file_path):
         os.remove(file_path)
+    if os.path.exists(compressed_file_path):
+        os.remove(compressed_file_path)
 
-    return {
-        'response': '123'
-    }
+    # Возвращаем только predictions
+    predictions = result.get('predictions', [])
+    return {'predictions': predictions}
 
 
 # Настройка приложения
